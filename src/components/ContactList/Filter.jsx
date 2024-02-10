@@ -1,18 +1,17 @@
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getFilter } from '../../redux/filter/filter-selectors';
+import { selectFilter } from '../../redux/filter/filter-selectors';
 import { setFilter } from '../../redux/filter/filter-slice';
 
 import css from './contactlist.module.css';
 
 const Filter = () => {
-  const value = useSelector(getFilter);
+  const {filter} = useSelector(selectFilter);
 
   const dispatch = useDispatch();
   
   const onChange = event => {
-    const action = setFilter(event.currentTarget.value);
-    return dispatch(action);
+    return dispatch(setFilter(event.currentTarget.value));
   };
   return (
     <label className={css.filter}>
@@ -21,7 +20,7 @@ const Filter = () => {
         className={css.field}
         type="text"
         name="filter"
-        value={value}
+        value={filter}
         onChange={onChange}
       />
     </label>

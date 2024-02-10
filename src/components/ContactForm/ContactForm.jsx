@@ -1,19 +1,22 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { nanoid } from 'nanoid';
-
-import { addName } from '../../redux/contacts/contacts-slice';
-import { getAllNames } from '../../redux/contacts/contacts-selectors';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import {
+  fetchContacts,
+  addContact,
+} from '../../redux/contacts/contacts-operations';
 
 import css from './contactform.module.css';
 
 export default function ContactForm() {
-  const contacts = useSelector(getAllNames);
 
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const handleInput = event => {
     const { name, value } = event.currentTarget;
@@ -21,8 +24,8 @@ export default function ContactForm() {
       case 'name':
         setName(value);
         break;
-      case 'number':
-        setNumber(value);
+      case 'phone':
+        setPhone(value);
         break;
       default:
         return;
@@ -31,43 +34,24 @@ export default function ContactForm() {
 
   const handleAddName = event => {
     event.preventDefault();
-    const nameId = event.currentTarget.elements.name.id;
-    const arrayContacts = contacts.find(contact => contact.name === name);
-    const arrayNumbers = contacts.find(contact => contact.number === number);
-
-    if (arrayContacts) {
-      alert(
-        `${name} is already in contacts with number ${arrayContacts.number}`
-      );
-      return;
-    }
-    if (arrayNumbers) {
-      alert(`${number} is already in contact ${arrayNumbers.name}`);
-      return;
-    }
 
     const data = {
       name,
-      number,
-      id: nameId,
+      phone,
     };
-    const action = addName(data);
-    dispatch(action);
+     dispatch(addContact(data));
 
     reset();
   };
 
   const reset = () => {
     setName('');
-    setNumber('');
+    setPhone('');
   };
-
-  const nameId = nanoid();
-  const phoneId = nanoid();
 
   return (
     <form className={css.info} onSubmit={handleAddName}>
-      <label htmlFor={nameId} className={css.label}>
+      <label className={css.label}>
         Name
         <input
           className={css.field}
@@ -76,19 +60,17 @@ export default function ContactForm() {
           required
           value={name}
           onChange={handleInput}
-          id={nameId}
         />
       </label>
-      <label htmlFor={phoneId} className={css.label}>
-        Number
+      <label className={css.label}>
+        Phone
         <input
           className={css.field}
           type="tel"
-          name="number"
+          name="phone"
           required
-          value={number}
+          value={phone}
           onChange={handleInput}
-          id={phoneId}
         />
       </label>
       <button className={css.btn} type="submit">

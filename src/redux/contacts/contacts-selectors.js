@@ -1,12 +1,13 @@
-export const getAllNames = store => store.contacts;
+export const selectAllNames = store => store.contacts;
 
-export const getFilteredContacts = store => {
-  const { contacts, filter } = store;
+export const selectFilteredContacts = store => {
+  const { contacts:{items}, filter } = store;
   if (!filter) {
-    return contacts;
+    return items;
   }
-  const filterLowerCase = store.filter.toLowerCase();
-  return store.contacts.filter(contact =>
+  const filterLowerCase = filter.toLowerCase();
+
+  return items.filter(contact =>
     contact.name.toLowerCase().includes(filterLowerCase)
   );
 };
