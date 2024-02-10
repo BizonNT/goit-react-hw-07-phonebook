@@ -4,6 +4,7 @@ import ContactForm from './ContactForm/ContactForm';
 import Filter from './ContactList/Filter';
 import ContactList from './ContactList/ContactList';
 import Notification from './Notification/Notification';
+import Loader from './Loader/Loader';
 
 import { selectAllNames } from '../redux/contacts/contacts-selectors';
 
@@ -17,7 +18,7 @@ export default function App() {
       <h2 className={css.title}>Phonebook</h2>
       <ContactForm />
       <h3 className={css.subtitle}>Contacts</h3>
-      {isLoading && <p>...Loading</p>}
+      {isLoading && <Loader />}
       {error && <Notification message={error} />}
       {!isLoading &&
         (items.length ? (
